@@ -1,5 +1,5 @@
 sceneSetups:
-- path: Assets/Part1/Steering.unity
+- path: Assets/Part2/GuardScene.unity
   isLoaded: 1
   isActive: 1
   isSubScene: 0
