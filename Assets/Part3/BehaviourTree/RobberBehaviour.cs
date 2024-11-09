@@ -30,8 +30,8 @@ public class RobberBehaviour : MonoBehaviour
         leaf goToVan = new leaf("Go To Van", GoToVan);
         Selector opendoor = new Selector("Open Door");
 
-        opendoor.AddChild(goToBackDoor);
         opendoor.AddChild(goToFrontDoor);
+        opendoor.AddChild(goToBackDoor);   
 
         steal.AddChild(goToBackDoor);
         steal.AddChild(goToDiamond);
@@ -46,22 +46,43 @@ public class RobberBehaviour : MonoBehaviour
 
     public Node.Status GoToDiamond()
     {
-        return GoToLocation(diamond.transform.position);
+        Node.Status s = GoToLocation(diamond.transform.position);
+        if (s== Node.Status.SUCCESS)
+        {
+            diamond.transform.parent = this.gameObject.transform;
+        }
+        return s;
     }
 
     public Node.Status GoToBackDoor()
     {
-        return GoToLocation(backdoor.transform.position);
+        return GoToDoor(backdoor);
     }
 
     public Node.Status GoToFrontDoor()
     {
-        return GoToLocation(frontdoor.transform.position);
+        return GoToDoor(frontdoor);
     }
 
     public Node.Status GoToVan()
     {
         return GoToLocation(van.transform.position);
+    }
+
+    public Node.Status GoToDoor(GameObject door)
+    {
+        Node.Status s = GoToLocation(door.transform.position);
+        if (s == Node.Status.SUCCESS)
+        {
+            if (!door.GetComponent<Lock>().isLocked)
+            {
+                door.SetActive(false);
+                return Node.Status.SUCCESS;
+            }
+            return Node.Status.FAILURE;
+        }
+        else
+            return s;
     }
 
     Node.Status GoToLocation(Vector3 destination)
